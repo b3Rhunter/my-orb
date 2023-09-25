@@ -1,0 +1,285 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --shadow-color: 192deg 100% 0%;
+  --shadow-elevation-low:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+    0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
+    1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
+  --shadow-elevation-medium:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.36),
+    0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.36),
+    2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.36),
+    5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
+  --shadow-elevation-high:
+    0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+    1.5px 2.9px 3.7px -0.4px hsl(var(--shadow-color) / 0.34),
+    2.7px 5.4px 6.8px -0.7px hsl(var(--shadow-color) / 0.34),
+    4.5px 8.9px 11.2px -1.1px hsl(var(--shadow-color) / 0.34),
+    7.1px 14.3px 18px -1.4px hsl(var(--shadow-color) / 0.34),
+    11.2px 22.3px 28.1px -1.8px hsl(var(--shadow-color) / 0.34),
+    17px 33.9px 42.7px -2.1px hsl(var(--shadow-color) / 0.34),
+    25px 50px 62.9px -2.5px hsl(var(--shadow-color) / 0.34);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+
+  height: 100svh;
+  height: 100vh;
+
+  background-color: rgb(0, 0, 0);
+  color: rgb(229, 229, 229);
+
+  font-family: monospace;
+  font-size: 16px;
+  padding: 1em;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.connect {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+}
+
+.auction-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 15px;
+
+  max-width: 50%;
+  min-width: 200px;
+  max-height: 155px;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  padding: 1em;
+  position: fixed;
+  top: 24px;
+  left: 24px;
+
+  z-index: 9;
+  overflow-y: auto;
+
+  background-color: rgb(0, 0, 0);
+  box-shadow: var(--shadow-elevation-high);
+}
+
+.card {
+  width: 66%;
+  min-width: 350px;
+  height: 66%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.card button {
+  width: 90%;
+  max-width: 200px;
+}
+
+button {
+  padding: 0.5em 1em;
+  border-radius: 50em;
+  border: 1px solid rgba(20, 20, 20, 0.2);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  border: 1px solid rgba(255, 255, 255, 0.204);
+  background-color: rgb(20, 20, 20);
+  color: rgb(230, 230, 230);
+  transform: translateY(-4px);
+}
+
+button:active {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgb(230, 230, 230);
+  color: rgb(20, 20, 20);
+  transform: translateY(4px);
+}
+
+input {
+  background-color: rgb(20, 20, 20);
+  color: rgb(230, 230, 230);
+  border: 1px solid rgba(255, 255, 255, 0.203);
+  border-radius: 50em;
+  padding: 0.75em 1em;
+  text-align: center;
+  outline: none;
+  width: 90%;
+  max-width: 200px;
+}
+
+.ui {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  max-width: 50%;
+  gap: 20px;
+  flex-grow: 1;
+  z-index: 99;
+}
+
+.orb-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+}
+
+.orb {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  
+  background: radial-gradient(circle at 50px 50px, #a8e8ff, #0098b6);
+
+  position: relative;
+  animation: hoverOrb 3s infinite;
+  animation-timing-function: cubic-bezier(0.42,0,0.58,1);
+}
+
+.orb::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgb(0, 200, 255);
+  background: radial-gradient(circle, rgb(78, 217, 255) 0%, rgba(0, 251, 255, 0) 100%);
+
+  top: 105%;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  transform: perspective(1em) rotateX(40deg);
+
+  filter: blur(1em);
+  animation: hoverReflection 3s infinite;
+  animation-timing-function: cubic-bezier(0.42,0,0.58,1);
+}
+
+.orb:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 5%;
+  left: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) 14%, rgba(255, 255, 255, 0) 24%);
+  transform: translateX(-80px) translateY(-90px) skewX(-20deg);
+  filter: blur(10px);
+}
+
+.stage {
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+.orb .shadow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0) 50%);
+  transform: rotateX(90deg) translateZ(-150px);
+  z-index: -1;
+}
+
+@keyframes hoverOrb {
+  0%, 100% {
+    transform: translateY(0);
+
+    box-shadow: 
+    0px 0px 65px 0px rgba(0,234,255,0),
+    0px 0px 60px 0px rgba(0, 234, 255, 0),
+    0px 0px 55px 0px rgba(0, 234, 255, 0.1),
+    0px 0px 50px 0px rgba(0, 234, 255, 0.2),
+    0px 0px 40px 0px rgba(0, 234, 255, 0.3),
+    0px 0px 30px 0px rgba(0, 234, 255, 0.4),
+    0px 0px 20px 0px rgba(0, 234, 255, 0.5),
+    0px 0px 15px 0px rgba(0, 255, 234, 0.75),
+    0px 0px 10px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 5px 0px rgba(255, 255, 255, 0.85),
+    inset 0px 0px 20px 0px rgba(255, 255, 255, 0.5),
+    inset 0px 0px 40px 0px rgba(0, 255, 234, 0.25);
+  }
+  50% {
+    transform: translateY(-20px);
+    box-shadow: 0px 0px 65px 0px rgba(0,234,255,0.1),
+    0px 0px 60px 0px rgba(0, 234, 255, 0.2),
+    0px 0px 55px 0px rgba(0, 234, 255, 0.5),
+    0px 0px 50px 0px rgba(0, 234, 255, 0.55),
+    0px 0px 40px 0px rgba(0, 234, 255, 0.60),
+    0px 0px 30px 0px rgba(0, 234, 255, 0.63),
+    0px 0px 20px 0px rgba(0, 234, 255, 0.65),
+    0px 0px 15px 0px rgba(0, 255, 234, 0.75),
+    0px 0px 10px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 5px 0px rgba(255, 255, 255, 0.85),
+    inset 0px 0px 20px 0px rgba(255, 255, 255, 0.5),
+    inset 0px 0px 40px 0px rgba(0, 255, 234, 0.25);
+  }
+}
+
+@keyframes hoverReflection {
+  0%, 100% {
+    transform: perspective(1em) rotateX(40deg) scale(1, 0.2) translateY(0);
+    top: 95%;
+  }
+  50% {
+    transform: perspective(1em) rotateX(40deg) scale(1, 0.2) translateY(20px);
+    top: 105%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .auction-details {
+    font-size: 12px;
+  }
+}
