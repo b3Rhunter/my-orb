@@ -2,7 +2,17 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import ABI from './ABI.json';
 
-const contractAddress = "0x6626ef990C27812d31d5ba46efC3aF91B6043C66";
+const contractAddress = "0x500651D498e4e7E25C793855BA0b65015c8df1dA";
+
+function formatTime(seconds) {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+  const remainingSeconds = ((seconds % 86400) % 3600) % 60;
+
+  const timeString = `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
+  return timeString;
+}
 
 function App() {
 
@@ -22,8 +32,11 @@ function App() {
   const [chat, setChat] = useState([]);
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState("");
+  const [cooldown, setCooldown] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const connect = async () => {
+    setLoading(true)
     try {
       let provider;
       provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -81,7 +94,6 @@ function App() {
           text: message[1]
         });
       }
-      console.log(chatMessages)
       await signer.signMessage("Hello World");
       const { ethereum } = window;
       if (ethereum) {
@@ -106,7 +118,7 @@ function App() {
       setHighestBid(_highestBid.toString())
       const currentTimestamp = Math.floor(Date.now() / 1000);
       const remainingTime = _endOfAuction - currentTimestamp;
-      if (remainingTime < 0) {
+      if (remainingTime < 0 && userAddress === highestBidder) {
         setFinalize(true)
       }
       setTimeLeft(remainingTime > 0 ? remainingTime : 0);
@@ -117,9 +129,11 @@ function App() {
     } catch (error) {
       console.log(error)
     }
+    setLoading(false)
   }
 
   const bid = async () => {
+    setLoading(true)
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       await provider.send("eth_requestAccounts", []);
@@ -127,12 +141,20 @@ function App() {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       const tx = await contract.bid({ value: ethers.utils.parseEther(bidPrice) });
       await tx.wait()
+
+      const _highestBidder = await contract.leadingBidder();
+      const _highestBid = await contract.leadingBid();
+      setHighestBidder(_highestBidder.toString())
+      setHighestBid(_highestBid.toString())
+      setBidPrice("")
     } catch (error) {
       console.log(error)
     }
+    setLoading(false)
   }
 
   const answerQuestion = async () => {
+    setLoading(true)
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       await provider.send("eth_requestAccounts", []);
@@ -140,12 +162,26 @@ function App() {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       const tx = await contract.answer(answer);
       await tx.wait()
+
+      const chatLength = await contract.getChatHistoryLength();
+      const chatMessages = [];
+      for (let i = 0; i < chatLength; i++) {
+        const message = await contract.getChatMessage(i);
+        chatMessages.push({
+          sender: message[0],
+          text: message[1]
+        });
+      }
+      setChat(chatMessages);
+      setCooldown(false)
     } catch (error) {
       console.log(error)
     }
+    setLoading(false)
   }
 
   const askQuestion = async () => {
+    setLoading(true)
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       await provider.send("eth_requestAccounts", []);
@@ -153,12 +189,25 @@ function App() {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       const tx = await contract.question(question);
       await tx.wait()
+
+      const chatLength = await contract.getChatHistoryLength();
+      const chatMessages = [];
+      for (let i = 0; i < chatLength; i++) {
+        const message = await contract.getChatMessage(i);
+        chatMessages.push({
+          sender: message[0],
+          text: message[1]
+        });
+      }
+      setChat(chatMessages);
     } catch (error) {
       console.log(error)
     }
+    setLoading(false)
   }
 
   const claimOrb = async () => {
+    setLoading(true)
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       await provider.send("eth_requestAccounts", []);
@@ -166,9 +215,15 @@ function App() {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       const tx = await contract.finalizeAuction();
       await tx.wait()
+
+      const _keeper = await contract.keeper();
+      setKeeperAddress(_keeper)
+      setFinalize(false)
+      setCooldown(true)
     } catch(error) {
       console.log(error)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -178,11 +233,9 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-
-
   return (
     <div className="App">
-
+      {loading && <div className='loading'><div className='spinner'></div></div>}
       {!connected && <button onClick={connect}>connect</button>}
       {connected && <button className='connect'>{name}</button>}
       {connected && (
@@ -191,14 +244,18 @@ function App() {
             <p>Keeper: {keeperAddress?.substr(0, 6) + "..."}</p>
             <p>Highest Bidder: {highestBidder?.substr(0, 6) + "..."}</p>
             <p>Highest Bid: {highestBid && ethers.utils.formatEther(highestBid)} ETH</p>
-            <p>Auction Ends: {timeLeft} seconds</p>
+            <p>Auction Ends: {formatTime(timeLeft)}</p>
           </section>
 
           <section className='card'>
             <div className='ui'>
 
+              {!finalize && (
+              <>
               <input type='text' value={bidPrice} onChange={(e) => setBidPrice(e.target.value)} placeholder='place bid...' />
               <button onClick={() => bid(bidPrice)}>Bid!</button>
+              </>
+              )}
               {finalize && <button onClick={claimOrb}>Claim Soul Gem</button>}
               <div className='chat'>
               <p>chat...</p>
@@ -209,22 +266,30 @@ function App() {
 
               {keeper && (
                 <>
+                {cooldown && (
+                  <>
                   <input
-                    type='text'
-                    value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
-                    placeholder="Ask a question..." />
-                  <button onClick={askQuestion}>Ask</button>
+                      type='text'
+                      value={question}
+                      onChange={(e) => setQuestion(e.target.value)}
+                      placeholder="Ask a question..." />
+                      <button onClick={askQuestion}>Ask</button>
+                      </>
+                )}
                 </>
               )}
               {beneficiary && (
                 <>
+                {cooldown && (
+                  <>
                   <input
-                    type='text'
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    placeholder="Answer the question..." />
-                  <button onClick={answerQuestion}>Answer</button>
+                      type='text'
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      placeholder="Answer the question..." />
+                      <button onClick={answerQuestion}>Answer</button>
+                      </>
+                  )}
                 </>
               )}
             </div>
