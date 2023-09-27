@@ -106,6 +106,9 @@ function App() {
       setHighestBid(_highestBid.toString())
       const currentTimestamp = Math.floor(Date.now() / 1000);
       const remainingTime = _endOfAuction - currentTimestamp;
+      if (remainingTime < 0) {
+        setFinalize(true)
+      }
       setTimeLeft(remainingTime > 0 ? remainingTime : 0);
       setCurrentPrice(getPrice.toString())
       setBalance(getBalance.toString())
@@ -155,6 +158,19 @@ function App() {
     }
   }
 
+  const claimOrb = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, ABI, signer);
+      const tx = await contract.finalizeAuction();
+      await tx.wait()
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft(prevTime => prevTime > 0 ? prevTime - 1 : 0);
@@ -183,6 +199,7 @@ function App() {
 
               <input type='text' value={bidPrice} onChange={(e) => setBidPrice(e.target.value)} placeholder='place bid...' />
               <button onClick={() => bid(bidPrice)}>Bid!</button>
+              {finalize && <button onClick={claimOrb}>Claim Soul Gem</button>}
               <div className='chat'>
               <p>chat...</p>
               {chat && chat.map((message, index) => (
