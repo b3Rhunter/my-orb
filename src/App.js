@@ -84,6 +84,7 @@ function App() {
       const _highestBid = await contract.leadingBid();
       const _endOfAuction = await contract.auctionEndTime();
       const _keeper = await contract.keeper();
+      await signer.signMessage("Welcome to the Soul Gem Auction!");
       const _beneficiary = await contract.beneficiary();
       const chatLength = await contract.getChatHistoryLength();
       const chatMessages = [];
@@ -94,16 +95,29 @@ function App() {
           text: message[1]
         });
       }
-      await signer.signMessage("Hello World");
+      
       const { ethereum } = window;
       if (ethereum) {
         const ensProvider = new ethers.providers.InfuraProvider('mainnet');
         const displayAddress = userAddress?.substr(0, 6) + "...";
         const ens = await ensProvider.lookupAddress(userAddress);
+        const keeperEns = await ensProvider.lookupAddress(_keeper);
+        const bidderEns = await ensProvider.lookupAddress(_highestBidder);
+        console.log(keeperEns)
         if (ens !== null) {
           setName(ens)
         } else {
           setName(displayAddress)
+        }
+        if (keeperEns !== null) {
+          setKeeperAddress(keeperEns)
+        } else {
+          setKeeperAddress(_keeper?.substr(0, 6) + "...")
+        }
+        if (bidderEns !== null) {
+          setHighestBidder(bidderEns)
+        } else {
+          setHighestBidder(_highestBidder?.substr(0, 6) + "...")
         }
       }
       setConnected(true);
@@ -114,7 +128,6 @@ function App() {
       if (_beneficiary === userAddress) {
         setBeneficiary(true)
       }
-      setHighestBidder(_highestBidder.toString())
       setHighestBid(_highestBid.toString())
       const currentTimestamp = Math.floor(Date.now() / 1000);
       const remainingTime = _endOfAuction - currentTimestamp;
@@ -125,7 +138,6 @@ function App() {
       setCurrentPrice(getPrice.toString())
       setBalance(getBalance.toString())
       setChat(chatMessages);
-      setKeeperAddress(_keeper)
     } catch (error) {
       console.log(error)
     }
@@ -241,7 +253,7 @@ function App() {
       {connected && (
         <main>
           <section className='auction-details'>
-            <p>Keeper: {keeperAddress?.substr(0, 6) + "..."}</p>
+            <p>Keeper: {keeperAddress}</p>
             <p>Highest Bidder: {highestBidder?.substr(0, 6) + "..."}</p>
             <p>Highest Bid: {highestBid && ethers.utils.formatEther(highestBid)} ETH</p>
             <p>Auction Ends: {formatTime(timeLeft)}</p>
