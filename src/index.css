@@ -33,6 +33,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
@@ -366,4 +367,26 @@ input {
   .orb-container {
     padding-right: 20px;
   }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  background-color: #26263000;
+  width: 0.5em;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.203);
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffee;
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.678);
 }

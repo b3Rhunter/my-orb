@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import ABI from './ABI.json';
 
-const contractAddress = "0x500651D498e4e7E25C793855BA0b65015c8df1dA";
+const contractAddress = "0xc5e8D625e7272bC0fE1450f55126d522bb900Bd6";
 
 function formatTime(seconds) {
   const days = Math.floor(seconds / 86400);
@@ -131,8 +131,12 @@ function App() {
       setHighestBid(_highestBid.toString())
       const currentTimestamp = Math.floor(Date.now() / 1000);
       const remainingTime = _endOfAuction - currentTimestamp;
-      if (remainingTime < 0 && userAddress === highestBidder) {
+      const bidder = await contract.leadingBidder()
+      if (remainingTime < 0 && userAddress === bidder) {
         setFinalize(true)
+      }
+      if (remainingTime < 0) {
+        setCooldown(true)
       }
       setTimeLeft(remainingTime > 0 ? remainingTime : 0);
       setCurrentPrice(getPrice.toString())
@@ -229,7 +233,7 @@ function App() {
       await tx.wait()
 
       const _keeper = await contract.keeper();
-      setKeeperAddress(_keeper)
+      setKeeperAddress(_keeper?.substr(0, 6) + "...")
       setFinalize(false)
       setCooldown(true)
     } catch(error) {
@@ -270,7 +274,6 @@ function App() {
               )}
               {finalize && <button onClick={claimOrb}>Claim Soul Gem</button>}
               <div className='chat'>
-              <p>chat...</p>
               {chat && chat.map((message, index) => (
                 <p key={index}>{message.sender.substr(0, 6) + "..."}: {message.text}</p>
               ))}
