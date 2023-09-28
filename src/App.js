@@ -249,6 +249,8 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const orbClass = finalize ? 'red-orb' : 'blue-orb';
+
   return (
     <div className="App">
       {loading && <div className='loading'><div className='spinner'></div></div>}
@@ -303,7 +305,7 @@ function App() {
 
             <div className='orb-container'>
               <section className="stage">
-                <figure className="orb"><span className="shadow"></span></figure>
+              <figure className={`orb ${orbClass}`}><span className="shadow"></span></figure>
               </section>
             </div>
 
