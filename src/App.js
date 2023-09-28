@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import ABI from './ABI.json';
 
-const contractAddress = "0xc5e8D625e7272bC0fE1450f55126d522bb900Bd6";
+const contractAddress = "0x058ce997aE71d723C53F9FaaE298950B5659449B";
 
 function formatTime(seconds) {
   const days = Math.floor(seconds / 86400);
@@ -33,7 +33,8 @@ function App() {
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState("");
   const [cooldown, setCooldown] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [auctionLive, setAuctionLive] = useState(false);
 
   const connect = async () => {
     setLoading(true)
@@ -86,6 +87,7 @@ function App() {
       const _keeper = await contract.keeper();
       await signer.signMessage("Welcome to the Soul Gem Auction!");
       const _beneficiary = await contract.beneficiary();
+      const _auctionLive = await contract.isAuctionOngoing();
       const chatLength = await contract.getChatHistoryLength();
       const chatMessages = [];
       for (let i = 0; i < chatLength; i++) {
@@ -142,6 +144,7 @@ function App() {
       setCurrentPrice(getPrice.toString())
       setBalance(getBalance.toString())
       setChat(chatMessages);
+      setAuctionLive(_auctionLive)
     } catch (error) {
       console.log(error)
     }
@@ -188,8 +191,13 @@ function App() {
           text: message[1]
         });
       }
+      const _endOfAuction = await contract.auctionEndTime();
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const remainingTime = _endOfAuction - currentTimestamp;
+      setTimeLeft(remainingTime > 0 ? remainingTime : 0);
       setChat(chatMessages);
-      setCooldown(false)
+      setCooldown(false);
+      setAuctionLive(true);
     } catch (error) {
       console.log(error)
     }
@@ -243,13 +251,18 @@ function App() {
   }
 
   useEffect(() => {
+    if (timeLeft === 0) {
+      setAuctionLive(false)
+      setFinalize(true)
+      setCooldown(true)
+    }
     const interval = setInterval(() => {
       setTimeLeft(prevTime => prevTime > 0 ? prevTime - 1 : 0);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [timeLeft]);
 
-  const orbClass = finalize ? 'red-orb' : 'blue-orb';
+  const orbClass = !auctionLive ? 'red-orb' : 'blue-orb';
 
   return (
     <div className="App">
@@ -268,20 +281,24 @@ function App() {
           <section className='card'>
             <div className='ui'>
 
-              {!finalize && (
+              {auctionLive && (
               <>
               <input type='text' value={bidPrice} onChange={(e) => setBidPrice(e.target.value)} placeholder='place bid...' />
               <button onClick={() => bid(bidPrice)}>Bid!</button>
               </>
               )}
-              {finalize && !cooldown &&<button onClick={claimOrb}>Claim Soul Gem</button>}
+              {finalize && cooldown && !auctionLive && <button onClick={claimOrb}>Claim Soul Gem</button>}
               <div className='chat'>
               {chat && chat.map((message, index) => (
-                <p key={index}>{message.sender.substr(0, 6) + "..."}: {message.text}</p>
+                <div className='chat-cont' key={index}>
+                    <strong>{message.sender.substr(0, 6) + "..."}</strong>
+                    <em>{message.text}</em>
+                </div>
+                
               ))}
               </div>
 
-              {keeper && cooldown && (
+              {keeper && cooldown && !auctionLive && (
                 <>
                   <input
                       type='text'
@@ -291,7 +308,7 @@ function App() {
                   <button onClick={askQuestion}>Ask</button>
                 </>
               )}
-              {beneficiary && cooldown && (
+              {beneficiary && cooldown && !auctionLive && (
                   <>
                   <input
                   type='text'
