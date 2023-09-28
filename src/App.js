@@ -253,9 +253,9 @@ function App() {
     <div className="App">
       {loading && <div className='loading'><div className='spinner'></div></div>}
       {!connected && <button onClick={connect}>connect</button>}
-      {connected && <button className='connect'>{name}</button>}
       {connected && (
         <main>
+          <button className='connect'>{name}</button>
           <section className='auction-details'>
             <p>Keeper: {keeperAddress}</p>
             <p>Highest Bidder: {highestBidder?.substr(0, 6) + "..."}</p>
@@ -272,40 +272,32 @@ function App() {
               <button onClick={() => bid(bidPrice)}>Bid!</button>
               </>
               )}
-              {finalize && <button onClick={claimOrb}>Claim Soul Gem</button>}
+              {finalize && !cooldown &&<button onClick={claimOrb}>Claim Soul Gem</button>}
               <div className='chat'>
               {chat && chat.map((message, index) => (
                 <p key={index}>{message.sender.substr(0, 6) + "..."}: {message.text}</p>
               ))}
               </div>
 
-              {keeper && (
+              {keeper && cooldown && (
                 <>
-                {cooldown && (
-                  <>
                   <input
                       type='text'
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
                       placeholder="Ask a question..." />
-                      <button onClick={askQuestion}>Ask</button>
-                      </>
-                )}
+                  <button onClick={askQuestion}>Ask</button>
                 </>
               )}
-              {beneficiary && (
-                <>
-                {cooldown && (
+              {beneficiary && cooldown && (
                   <>
                   <input
-                      type='text'
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      placeholder="Answer the question..." />
-                      <button onClick={answerQuestion}>Answer</button>
-                      </>
-                  )}
-                </>
+                  type='text'
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder="Answer the question..." />
+                  <button onClick={answerQuestion}>Answer</button>
+                  </>
               )}
             </div>
 
