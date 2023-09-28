@@ -272,7 +272,7 @@ function App() {
         <main>
           <button className='connect'>{name}</button>
           <section className='auction-details'>
-            <p>Keeper: {keeperAddress}</p>
+            <p>Current Holder: {keeperAddress}</p>
             <p>Highest Bidder: {highestBidder?.substr(0, 6) + "..."}</p>
             <p>Highest Bid: {highestBid && ethers.utils.formatEther(highestBid)} ETH</p>
             <p>Auction Ends: {formatTime(timeLeft)}</p>
