@@ -86,3 +86,8 @@ Follow these steps to setup and run the Soul Gem project locally:
 1. Clone the repository: 
 ```bash
 git clone https://github.com/b3Rhunter/soul-gem.git
+
+2. Navigate to the project directory:
+```bash
+cd soul-gem
+
