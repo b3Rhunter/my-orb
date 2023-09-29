@@ -13,12 +13,41 @@ Soul Gem is a sophisticated blockchain project which leverages the power of Ethe
 
 ## Smart Contract - SoulGem.sol
 
-`SoulGem.sol` is the heart of the Soul Gem project. This smart contract encapsulates the logic and data structures necessary for the functioning of Soul Gem on the Ethereum blockchain. Here are some of the core features and functionalities encapsulated in `SoulGem.sol`:
+`SoulGem.sol` is an Ethereum smart contract that embodies the core logic of the Soul Gem project, utilizing the ERC-721 token standard for non-fungible tokens (NFTs). This contract extends the `ERC721Enumerable` and `Ownable` contracts from the OpenZeppelin library, which provide enumerable NFT functionality and access control mechanisms respectively.
 
-- **Token Management**: Implementation of ERC-20 token standard for creating and managing Soul Gem tokens.
-- **Access Control**: Define roles and permissions to restrict access to certain functionalities within the contract.
-- **Minting & Burning**: Functions to mint new tokens or burn existing ones, managing the overall supply of Soul Gem tokens.
-- **Transfer & Approval**: Functions for transferring tokens between accounts and approving transactions.
+Here are the key features and functionalities embedded within `SoulGem.sol`:
+
+- **Token Standards**: Implements ERC-721 token standard utilizing OpenZeppelin's `ERC721Enumerable` contract which enables enumeration of NFTs.
+- **Access Control**: Inherits from OpenZeppelin's `Ownable` contract to ensure proper access control for administrative functionalities.
+- **Token Information**: Provides a method `tokenURI` to retrieve the URI of a given token, adhering to the ERC-721 standard.
+- **Auction Mechanism**: 
+  - Initiation of an auction with a predefined end time.
+  - Acceptance of bids during the auction period.
+  - Finalization of the auction and transfer of ownership based on the leading bid.
+  - Calculation and transfer of royalties based on the bid amount.
+- **Chat Interaction**:
+  - Ability for the current keeper of the token to ask a question.
+  - Beneficiary's ability to answer the question.
+  - Storing the chat history within the blockchain, allowing for retrieval of chat messages and length of chat history.
+- **Royalty Distribution**: 
+  - Calculation and distribution of royalties upon finalization of the auction.
+  - Method to split proceeds between the beneficiary and the receiver based on a specified royalty percentage.
+- **Auction State Query**: Functionality to check whether an auction is ongoing or has ended.
+
+### Data Structures and State Variables:
+- **Beneficiary and Keeper**: Addresses of the beneficiary and the keeper are stored, where the beneficiary receives the proceeds from the auction, and the keeper is the current holder of the token.
+- **Auction Details**: 
+  - Variables to store auction end time, leading bidder, leading bid amount, and the price of the token.
+  - A boolean variable to track if the auction is ongoing.
+- **Chat History**: 
+  - An array to store chat messages, where each message has a sender and text.
+  - Functionality to get the length of the chat history and retrieve individual chat messages.
+
+### Events and Auction Dynamics:
+The contract defines a clear auction mechanism where bids can be placed until the auction end time. Once the auction ends, the leading bidder has the right to finalize the auction, which triggers the transfer of the token and distribution of the auction proceeds. Additionally, the contract facilitates a chat interaction between the keeper and the beneficiary, where questions can be asked, and answers can be provided. This chat history is stored on-chain and can be retrieved through function calls.
+
+This smart contract forms the backbone of the Soul Gem project by encapsulating the necessary logic for NFT auctions, chat interactions, and royalty distributions, providing a robust foundation for a decentralized, interactive, and monetizable platform.
+
 
 ## Frontend - App.js
 
