@@ -86,8 +86,19 @@ Follow these steps to setup and run the Soul Gem project locally:
 1. Clone the repository: 
 ```bash
 git clone https://github.com/b3Rhunter/soul-gem.git
-
-2. Navigate to the project directory:
+```
+2. Clone the repository: 
 ```bash
-cd soul-gem
+git clone https://github.com/b3Rhunter/soul-gem.git
+```
 
+3. Install the dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the local development server:
+   ```bash
+   npm start
+   ```
+
+This detailed README.md file outlines the smart contract capabilities of `SoulGem.sol` and the functionality of `App.js` in the Soul Gem project. The markup provided ensures a structured and well-organized documentation that covers various aspects of the project including smart contract features, frontend functionalities, setup & installation instructions, usage, contribution, and licensing information.
