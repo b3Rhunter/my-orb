@@ -93,12 +93,12 @@ git clone https://github.com/b3Rhunter/soul-gem.git
 ```
 
 3. Install the dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 4. Start the local development server:
-   ```bash
-   npm start
-   ```
+```bash
+npm start
+```
 
 This detailed README.md file outlines the smart contract capabilities of `SoulGem.sol` and the functionality of `App.js` in the Soul Gem project. The markup provided ensures a structured and well-organized documentation that covers various aspects of the project including smart contract features, frontend functionalities, setup & installation instructions, usage, contribution, and licensing information.
