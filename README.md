@@ -87,16 +87,12 @@ Follow these steps to setup and run the Soul Gem project locally:
 ```bash
 git clone https://github.com/b3Rhunter/soul-gem.git
 ```
-2. Clone the repository: 
-```bash
-git clone https://github.com/b3Rhunter/soul-gem.git
-```
 
-3. Install the dependencies:
+2. Install the dependencies:
 ```bash
 npm install
 ```
-4. Start the local development server:
+3. Start the local development server:
 ```bash
 npm start
 ```
