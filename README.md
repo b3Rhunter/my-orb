@@ -48,15 +48,36 @@ The contract defines a clear auction mechanism where bids can be placed until th
 
 This smart contract forms the backbone of the Soul Gem project by encapsulating the necessary logic for NFT auctions, chat interactions, and royalty distributions, providing a robust foundation for a decentralized, interactive, and monetizable platform.
 
-
 ## Frontend - App.js
 
-`App.js` serves as the frontend of the Soul Gem project, providing a user interface for interaction with the blockchain. Here are some of the core functionalities provided by `App.js`:
+`App.js` is the main file driving the frontend of the Soul Gem project. It provides an interactive user interface (UI) to connect with the blockchain and interact with the `SoulGem.sol` smart contract. Here's a high-level overview of its functionalities:
 
-- **Wallet Connection**: Facilitates the connection of user's wallet to interact with the blockchain.
-- **Token Interaction**: Provides interfaces for users to transfer, mint, burn, or approve tokens.
-- **Smart Contract Interaction**: Enables users to interact with the `SoulGem.sol` smart contract, invoking its functions and querying its state.
-- **Event Notifications**: Displays blockchain events, such as transaction confirmations, to the user.
+- **Blockchain Connection**:
+  - Facilitates connection to the Ethereum blockchain via the MetaMask browser extension.
+  - Switches or adds the Ethereum network if not already connected to the desired network.
+  - Fetches and displays relevant contract data and user information upon connection.
+
+- **Auction Interaction**:
+  - Displays auction details like the current holder, highest bidder, highest bid, and time left for the auction to end.
+  - Provides a bidding interface when the auction is live.
+  - Enables the user to claim the Soul Gem when the auction ends and they are the highest bidder.
+
+- **Chat Interaction**:
+  - Displays the chat history between the keeper and the beneficiary.
+  - Provides interfaces for both the keeper and the beneficiary to ask and answer questions respectively.
+  - Reflects the chat interactions on the UI in real-time.
+
+- **Soul Gem Visualization**:
+  - Displays a visual representation of the Soul Gem, with its appearance changing based on the state of the auction (e.g., changing colors when the auction is live or ended).
+
+- **Loading and Error Handling**:
+  - Handles loading states and displays a loading spinner to indicate processing.
+  - Provides error handling and logging to ensure a smooth user experience.
+
+- **Responsive UI**:
+  - Provides a clean and intuitive user interface that updates in real-time to reflect the state of the blockchain and the Soul Gem contract.
+
+`App.js` has been structured in a way to keep the UI responsive and the user informed about the state of the auction, their interactions, and any changes happening on the blockchain relating to the Soul Gem contract. The frontend facilitates user interaction with the blockchain, making the auctioning, bidding, and chat functionalities accessible and user-friendly.
 
 ## Setup and Installation
 
