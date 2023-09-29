@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SimpleOrb is ERC721Enumerable, Ownable {
+contract SoulGem is ERC721Enumerable, Ownable {
     uint256 public constant FEE_DENOMINATOR = 100_00;
     uint256 public constant ORB_ID = 1;
 
@@ -29,7 +29,7 @@ contract SimpleOrb is ERC721Enumerable, Ownable {
 
     ChatMessage[] public chatHistory;
 
-    constructor() ERC721("My Orb", "ORB") {
+    constructor() ERC721("Soul Gem", "SOUL") {
         beneficiary = msg.sender;
         _tokenURI = "https://test.com";
         _mint(msg.sender, ORB_ID);
@@ -161,4 +161,3 @@ function finalizeAuction() external {
         return block.timestamp < auctionEndTime;
     }
 }
-
