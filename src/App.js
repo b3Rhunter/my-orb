@@ -181,7 +181,7 @@ function App() {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       const tx = await contract.answer(answer);
       await tx.wait()
-
+      const _keeper = await contract.keeper()
       const chatLength = await contract.getChatHistoryLength();
       const chatMessages = [];
       for (let i = 0; i < chatLength; i++) {
@@ -198,6 +198,10 @@ function App() {
       setChat(chatMessages);
       setCooldown(false);
       setAuctionLive(true);
+      setAnswer("")
+      setHighestBidder("")
+      setHighestBid("0")
+      setKeeper(_keeper)
     } catch (error) {
       console.log(error)
     }
@@ -223,6 +227,7 @@ function App() {
           text: message[1]
         });
       }
+      setQuestion("")
       setChat(chatMessages);
     } catch (error) {
       console.log(error)
@@ -244,6 +249,7 @@ function App() {
       setKeeperAddress(_keeper?.substr(0, 6) + "...")
       setFinalize(false)
       setCooldown(true)
+      setKeeper(true)
     } catch(error) {
       console.log(error)
     }
