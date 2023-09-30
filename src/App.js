@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import ABI from './ABI.json';
 
-const contractAddress = "0xf11809f5A5C43Ee7e6BD5Aa2f6dac489B6A81642";
+const contractAddress = "0x7F9F58Df44d4647094D4Ab49d3E238859dCAE67D";
 
 function formatTime(seconds) {
   const days = Math.floor(seconds / 86400);
