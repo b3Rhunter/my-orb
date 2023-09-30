@@ -72,7 +72,7 @@ function tokenURI(uint256 tokenId)
             '</style>',
             '<rect width="350" height="350"/>',
             '<radialGradient id="SVGID_1" cx="175" cy="315.95" r="128.5099" gradientTransform="matrix(1 0 0 0.2223 0 245.7022)" gradientUnits="userSpaceOnUse">',
-            '<stop  offset="0" style="stop-color:#3AC6F3"/>',
+            '<stop  offset="0" style="stop-color:', fillColor, '"/>',
             '<stop  offset="1" style="stop-color:#000000"/>',
             '</radialGradient>',
             '<ellipse class="st0" cx="175" cy="315.95" rx="132.95" ry="33.75"/>',
