@@ -88,6 +88,7 @@ function App() {
       await signer.signMessage("Welcome to the Soul Gem Auction!");
       const _beneficiary = await contract.beneficiary();
       const _auctionLive = await contract.isAuctionOngoing();
+      setAuctionLive(_auctionLive)
       const chatLength = await contract.getChatHistoryLength();
       const chatMessages = [];
       for (let i = 0; i < chatLength; i++) {
@@ -144,7 +145,7 @@ function App() {
       setCurrentPrice(getPrice.toString())
       setBalance(getBalance.toString())
       setChat(chatMessages);
-      setAuctionLive(_auctionLive)
+      
     } catch (error) {
       console.log(error)
     }
@@ -328,7 +329,7 @@ function App() {
 
             <div className='orb-container'>
               <section className="stage">
-              <figure className={`orb ${orbClass}`}><span className="shadow"></span></figure>
+              <figure className={`${orbClass}`}><span className="shadow"></span></figure>
               </section>
             </div>
 

@@ -267,7 +267,7 @@ input {
   perspective-origin: 50% 50%;
 }
 
-.orb .shadow {
+.shadow {
   position: absolute;
   width: 150px;
   height: 150px;
