@@ -10,6 +10,7 @@
                                           
                                           
 */
+
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -49,59 +50,60 @@ contract SoulGem is ERC721Enumerable, Ownable {
         startAuction();
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (string memory)
-    {
-        require(_exists(tokenId), "URI query for nonexistent token");
-        
+function tokenURI(uint256 tokenId)
+    public
+    view
+    virtual
+    override
+    returns (string memory)
+{
+    require(_exists(tokenId), "URI query for nonexistent token");
+    
+    string memory fillColor = isAuctionOngoing() ? "#37C6F4" : "#f43770";
 
-        string memory svg = string(
-            abi.encodePacked(
-                '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" ',
-                'preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">',
-                '<style type="text/css">',
-                '.st0{opacity:0.34;fill:url(#SVGID_1);}',
-                '.st1{fill:#37C6F4;}',
-                '.st2{fill:url(#SVGID);}',
-                '</style>',
-                '<rect width="350" height="350"/>',
-                '<radialGradient id="SVGID_1" cx="175" cy="315.95" r="128.5099" gradientTransform="matrix(1 0 0 0.2223 0 245.7022)" gradientUnits="userSpaceOnUse">',
-                '<stop  offset="0" style="stop-color:#3AC6F3"/>',
-                '<stop  offset="1" style="stop-color:#000000"/>',
-                '</radialGradient>',
-                '<ellipse class="st0" cx="175" cy="315.95" rx="132.95" ry="33.75"/>',
-                '<circle class="st1" cx="176.17" cy="145.32" r="114.91"/>',
-                '<radialGradient id="SVGID" cx="155.987" cy="123.6719" r="95.662" fx="97.6318" fy="106.8382" gradientUnits="userSpaceOnUse">',
-                '<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.5"/>',
-                '<stop  offset="1" style="stop-color:#000000;stop-opacity:0"/>',
-                '</radialGradient>',
-                '<circle style="fill:url(#SVGID);" cx="168.6" cy="151" r="145.8"/>',
-                '</svg>'
-            )
-        );
+    string memory svg = string(
+        abi.encodePacked(
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" ',
+            'preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">',
+            '<style type="text/css">',
+            '.st0{opacity:0.34;fill:url(#SVGID_1);}',
+            '.st1{fill:', fillColor, ';}', 
+            '.st2{fill:url(#SVGID);}',
+            '</style>',
+            '<rect width="350" height="350"/>',
+            '<radialGradient id="SVGID_1" cx="175" cy="315.95" r="128.5099" gradientTransform="matrix(1 0 0 0.2223 0 245.7022)" gradientUnits="userSpaceOnUse">',
+            '<stop  offset="0" style="stop-color:#3AC6F3"/>',
+            '<stop  offset="1" style="stop-color:#000000"/>',
+            '</radialGradient>',
+            '<ellipse class="st0" cx="175" cy="315.95" rx="132.95" ry="33.75"/>',
+            '<circle class="st1" cx="176.17" cy="145.32" r="114.91"/>',
+            '<radialGradient id="SVGID" cx="155.987" cy="123.6719" r="95.662" fx="97.6318" fy="106.8382" gradientUnits="userSpaceOnUse">',
+            '<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.5"/>',
+            '<stop  offset="1" style="stop-color:#000000;stop-opacity:0"/>',
+            '</radialGradient>',
+            '<circle style="fill:url(#SVGID);" cx="168.6" cy="151" r="145.8"/>',
+            '</svg>'
+        )
+    );
 
-        string memory svgBase64 = Base64.encode(bytes(svg));
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name": "Soul Gem',
-                        '", "description": "A mysterious soul gem", "image": "data:image/svg+xml;base64,',
-                        svgBase64, '"}'
-                    )
+    string memory svgBase64 = Base64.encode(bytes(svg));
+    string memory json = Base64.encode(
+        bytes(
+            string(
+                abi.encodePacked(
+                    '{"name": "Soul Gem',
+                    '", "description": "A mysterious soul gem", "image": "data:image/svg+xml;base64,',
+                    svgBase64, '"}'
                 )
             )
-        );
+        )
+    );
 
-        return string(abi.encodePacked("data:application/json;base64,", json));
-    }
+    return string(abi.encodePacked("data:application/json;base64,", json));
+}
 
     function startAuction() private {
-        auctionEndTime = block.timestamp + 3 days;
+        auctionEndTime = block.timestamp + 3 hours;
         leadingBidder = address(0);
         leadingBid = 0;
         taxStartTimestamp = block.timestamp;
